@@ -1,0 +1,13 @@
+[package]
+name = "pombase-rnacentral-process"
+version = "0.1.0"
+authors = ["Kim Rutherford <kmr44@cam.ac.uk>"]
+edition = "2018"
+
+
+[dependencies]
+csv = "1.1.3"
+getopts = "0.2"
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
