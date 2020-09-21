@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RfamAnnotation {
@@ -29,7 +29,7 @@ pub struct RfamAnnotation {
 // annotations from rfam_annotations_filename.  Return a Vec of the annotations
 // where the URS ID is in the identifiers file.
 pub fn parse(identifiers_filename: &str, rfam_annotations_filename: &str)
-             -> Result<Vec<RfamAnnotation>, Box<dyn Error>>
+             -> Result<HashMap<String, Vec<RfamAnnotation>>, Box<dyn Error>>
 {
     let identifiers_file = File::open(identifiers_filename)?;
     let identifiers_reader = BufReader::new(identifiers_file);
@@ -50,13 +50,14 @@ pub fn parse(identifiers_filename: &str, rfam_annotations_filename: &str)
         csv::ReaderBuilder::new().delimiter(b'\t').has_headers(false)
         .from_reader(annotations_reader);
 
-    let mut results = vec![];
+    let mut results: HashMap<String, Vec<RfamAnnotation>> = HashMap::new();
 
     for annotation_result in annotations_csv_reader.deserialize() {
         let record: RfamAnnotation = annotation_result?;
 
         if identifiers.contains(&record.urs_identifier) {
-            results.push(record);
+            results.entry(record.urs_identifier.clone())
+                .or_insert_with(Vec::new).push(record);
         }
     }
 
@@ -80,7 +81,7 @@ fn test_parse() {
 
     assert_eq![res.len(), 12];
 
-    let first_res = res.get(0).unwrap();
+    let first_res = res.get("URS000003EB75").unwrap().get(0).unwrap();
     assert_eq![first_res.urs_identifier, "URS000003EB75"];
     assert_eq![first_res.rfam_model_id, "RF00005"];
     assert_eq![first_res.rfam_model_description, "tRNA"];
