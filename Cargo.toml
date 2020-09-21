@@ -1,6 +1,6 @@
 [package]
 name = "pombase-rnacentral-process"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Kim Rutherford <kmr44@cam.ac.uk>"]
 edition = "2018"
 
