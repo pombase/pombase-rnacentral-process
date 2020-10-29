@@ -5,6 +5,6 @@ Run with:
 
 in: /var/pomcur/sources
 
-![Rust](https://github.com/pombase/pombase-rnacentral-process/workflows/Rust/badge.svg)
+![Tests](https://github.com/pombase/pombase-rnacentral-process/workflows/Tests/badge.svg)
 
 
